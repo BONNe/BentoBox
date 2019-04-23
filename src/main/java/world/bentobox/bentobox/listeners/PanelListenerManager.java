@@ -12,6 +12,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.panels.Panel;
@@ -29,27 +30,29 @@ public class PanelListenerManager implements Listener {
         // Open the inventory panel that this player has open (they can only ever have one)
         if (openPanels.containsKey(user.getUniqueId())) {
             // Check the name of the panel
-            if (inventory.getName().equals(openPanels.get(user.getUniqueId()).getInventory().getName())) {
-                // Close inventory if clicked outside and if setting is true
-                if (BentoBox.getInstance().getSettings().isClosePanelOnClickOutside() && event.getSlotType().equals(SlotType.OUTSIDE)) {
-                    event.getWhoClicked().closeInventory();
-                    return;
-                }
+            if (inventory.getHolder() instanceof Panel) {
+                Panel p = (Panel)inventory.getHolder();
+                if (p.getName() == event.getView().getTitle()) {
+                    // Close inventory if clicked outside and if setting is true
+                    if (BentoBox.getInstance().getSettings().isClosePanelOnClickOutside() && event.getSlotType().equals(SlotType.OUTSIDE)) {
+                        event.getWhoClicked().closeInventory();
+                        return;
+                    }
 
-                // Cancel the event. If they don't want it to be cancelled then the click handler(s) should uncancel it
-                event.setCancelled(true);
-                // Get the panel itself
-                Panel panel = openPanels.get(user.getUniqueId());
-                // Check that they clicked on a specific item
-                PanelItem pi = panel.getItems().get(event.getRawSlot());
-                if (pi != null) {
-                    pi.getClickHandler().ifPresent(handler ->
-                    // Execute the handler's onClick method and optionally cancel the event if the handler returns true
-                    event.setCancelled(handler.onClick(panel, user, event.getClick(), event.getSlot())));
+                    // Cancel the event. If they don't want it to be cancelled then the click handler(s) should uncancel it
+                    event.setCancelled(true);
+                    // Get the panel itself
+                    Panel panel = openPanels.get(user.getUniqueId());
+                    // Check that they clicked on a specific item
+                    PanelItem pi = panel.getItems().get(event.getRawSlot());
+                    if (pi != null) {
+                        pi.getClickHandler().ifPresent(handler ->
+                        // Execute the handler's onClick method and optionally cancel the event if the handler returns true
+                        event.setCancelled(handler.onClick(panel, user, event.getClick(), event.getSlot())));
+                    }
+                    // If there is a listener, then run it.
+                    panel.getListener().ifPresent(l -> l.onInventoryClick(user, event));
                 }
-                // If there is a listener, then run it.
-                panel.getListener().ifPresent(l -> l.onInventoryClick(user, event));
-
             } else {
                 // Wrong name - delete this panel
                 openPanels.remove(user.getUniqueId());

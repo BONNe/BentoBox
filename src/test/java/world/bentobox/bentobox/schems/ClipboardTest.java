@@ -230,7 +230,7 @@ public class ClipboardTest {
 
     @Test
     public void testCopySigns() {
-        when(block.getType()).thenReturn(Material.SIGN);
+        when(block.getType()).thenReturn(Material.OAK_SIGN);
         Sign bs = mock(Sign.class);
         String[] lines = {"line1", "line2", "line3", "line4"};
         when(bs.getLines()).thenReturn(lines);

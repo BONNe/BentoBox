@@ -97,7 +97,7 @@ public class PanelListenerManagerTest {
         Optional<PanelListener> opl = Optional.of(pl);
         when(panel.getListener()).thenReturn(opl);
         when(panel.getInventory()).thenReturn(top);
-        when(top.getName()).thenReturn("name");
+        when(panel.getName()).thenReturn("name");
         Map<Integer, PanelItem> map = new HashMap<>();
         PanelItem panelItem = mock(PanelItem.class);
         ch = mock(ClickHandler.class);
@@ -109,7 +109,7 @@ public class PanelListenerManagerTest {
 
         Panel wrongPanel = mock(Panel.class);
         anotherInv = mock(Inventory.class);
-        when(anotherInv.getName()).thenReturn("another_name");
+        when(wrongPanel.getName()).thenReturn("another_name");
         when(wrongPanel.getInventory()).thenReturn(anotherInv);
 
         // Clear the static panels

@@ -316,9 +316,9 @@ public class IslandsManagerTest {
             assertFalse("Fence :" + m.toString(), manager.isSafeLocation(location));
         });
         // Signs
-        when(ground.getType()).thenReturn(Material.SIGN);
+        when(ground.getType()).thenReturn(Material.OAK_SIGN);
         assertFalse("Sign", manager.isSafeLocation(location));
-        when(ground.getType()).thenReturn(Material.WALL_SIGN);
+        when(ground.getType()).thenReturn(Material.DARK_OAK_WALL_SIGN);
         assertFalse("Sign", manager.isSafeLocation(location));
         // Bad Blocks
         Material[] badMats = {Material.CACTUS, Material.OAK_BOAT};
@@ -341,20 +341,20 @@ public class IslandsManagerTest {
         when(space2.getType()).thenReturn(Material.STONE);
         assertFalse("Solid", manager.isSafeLocation(location));
 
-        when(space1.getType()).thenReturn(Material.WALL_SIGN);
+        when(space1.getType()).thenReturn(Material.DARK_OAK_WALL_SIGN);
         when(space2.getType()).thenReturn(Material.AIR);
         assertTrue("Wall sign 1", manager.isSafeLocation(location));
 
         when(space1.getType()).thenReturn(Material.AIR);
-        when(space2.getType()).thenReturn(Material.WALL_SIGN);
+        when(space2.getType()).thenReturn(Material.OAK_WALL_SIGN);
         assertTrue("Wall sign 2", manager.isSafeLocation(location));
 
-        when(space1.getType()).thenReturn(Material.SIGN);
+        when(space1.getType()).thenReturn(Material.OAK_SIGN);
         when(space2.getType()).thenReturn(Material.AIR);
         assertTrue("Wall sign 1", manager.isSafeLocation(location));
 
         when(space1.getType()).thenReturn(Material.AIR);
-        when(space2.getType()).thenReturn(Material.SIGN);
+        when(space2.getType()).thenReturn(Material.OAK_SIGN);
         assertTrue("Wall sign 2", manager.isSafeLocation(location));
     }
 

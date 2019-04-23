@@ -1,5 +1,10 @@
 package world.bentobox.bentobox.util.teleport;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.GameMode;
@@ -11,15 +16,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
+
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.util.Pair;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * A class that calculates finds a safe spot asynchronously and then teleports the player there.
@@ -276,8 +277,10 @@ public class SafeSpotTeleport {
         if (!type.equals(Material.AIR)) { // AIR
             Material space1 = chunk.getBlockType(x, Math.min(y + 1, worldHeight), z);
             Material space2 = chunk.getBlockType(x, Math.min(y + 2, worldHeight), z);
+
             if ((space1.equals(Material.AIR) && space2.equals(Material.AIR)) || (space1.equals(Material.NETHER_PORTAL) && space2.equals(Material.NETHER_PORTAL))
-                    && (!type.toString().contains("FENCE") && !type.toString().contains("DOOR") && !type.toString().contains("GATE") && !type.toString().contains("PLATE"))) {
+                    && (!type.toString().contains("FENCE") && !type.toString().contains("DOOR") && !type.toString().contains("GATE") && !type.toString().contains("PLATE")
+                            && !type.toString().contains("SIGN"))) {
                 switch (type) {
                 // Unsafe
                 case ANVIL:
@@ -292,7 +295,6 @@ public class SafeSpotTeleport {
                 case TALL_GRASS:
                 case PISTON_HEAD:
                 case MOVING_PISTON:
-                case SIGN:
                 case STONE_BUTTON:
                 case TORCH:
                 case TRIPWIRE:
