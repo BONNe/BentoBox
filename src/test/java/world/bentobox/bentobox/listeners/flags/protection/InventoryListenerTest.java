@@ -19,7 +19,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.block.Beacon;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Dispenser;
@@ -73,7 +72,7 @@ import world.bentobox.bentobox.util.Util;
 public class InventoryListenerTest {
 
     private final static List<Class<?>> HOLDERS = Arrays.asList(Horse.class, Chest.class,ShulkerBox.class, StorageMinecart.class, Dispenser.class,
-            Dropper.class, Hopper.class, Furnace.class, BrewingStand.class, Beacon.class);
+            Dropper.class, Hopper.class, Furnace.class, BrewingStand.class);
 
     private Location location;
     private BentoBox plugin;
