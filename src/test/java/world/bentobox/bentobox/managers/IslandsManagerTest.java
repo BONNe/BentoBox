@@ -336,23 +336,49 @@ public class IslandsManagerTest {
     public void testSolidBlocks() {
         when(space1.getType()).thenReturn(Material.STONE);
         assertFalse("Solid", manager.isSafeLocation(location));
-
+    }
+    /**
+     * Test method for {@link world.bentobox.bentobox.managers.IslandsManager#isSafeLocation(org.bukkit.Location)}.
+     */
+    @Test
+    public void testSolidBlocks2() {
         when(space1.getType()).thenReturn(Material.AIR);
         when(space2.getType()).thenReturn(Material.STONE);
         assertFalse("Solid", manager.isSafeLocation(location));
-
+    }
+    /**
+     * Test method for {@link world.bentobox.bentobox.managers.IslandsManager#isSafeLocation(org.bukkit.Location)}.
+     */
+    @Test
+    public void testSolidBlocks3() {
         when(space1.getType()).thenReturn(Material.DARK_OAK_WALL_SIGN);
         when(space2.getType()).thenReturn(Material.AIR);
         assertTrue("Wall sign 1", manager.isSafeLocation(location));
-
+    }
+    /**
+     * Test method for {@link world.bentobox.bentobox.managers.IslandsManager#isSafeLocation(org.bukkit.Location)}.
+     */
+    @Test
+    public void testSolidBlocks4() {
         when(space1.getType()).thenReturn(Material.AIR);
         when(space2.getType()).thenReturn(Material.OAK_WALL_SIGN);
         assertTrue("Wall sign 2", manager.isSafeLocation(location));
-
+    }
+    /**
+     * Test method for {@link world.bentobox.bentobox.managers.IslandsManager#isSafeLocation(org.bukkit.Location)}.
+     */
+    @Test
+    public void testSolidBlocks5() {
         when(space1.getType()).thenReturn(Material.OAK_SIGN);
         when(space2.getType()).thenReturn(Material.AIR);
         assertTrue("Wall sign 1", manager.isSafeLocation(location));
+    }
 
+    /**
+     * Test method for {@link world.bentobox.bentobox.managers.IslandsManager#isSafeLocation(org.bukkit.Location)}.
+     */
+    @Test
+    public void testSolidBlocks6() {
         when(space1.getType()).thenReturn(Material.AIR);
         when(space2.getType()).thenReturn(Material.OAK_SIGN);
         assertTrue("Wall sign 2", manager.isSafeLocation(location));
