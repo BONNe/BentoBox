@@ -369,6 +369,15 @@ public class IslandsManager {
     }
 
     /**
+     * Returns the IslandCache instance.
+     * @return the islandCache
+     * @since 1.5.0
+     */
+    public IslandCache getIslandCache() {
+        return islandCache;
+    }
+
+    /**
      * Used for testing only to inject the islandCache mock object
      * @param islandCache - island cache
      */
@@ -785,7 +794,7 @@ public class IslandsManager {
      * @param island - island
      * @since 1.3.0
      */
-    public void fixIslandCenter(Island island) {
+    private void fixIslandCenter(Island island) {
         World world = island.getWorld();
         if (world == null || island.getCenter() == null || !plugin.getIWM().inWorld(world)) {
             return;
