@@ -80,7 +80,7 @@ public class DeleteIslandChunks {
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 chunk.getBlock(x, 0, z).setBiome(grid.getBiome(x, z));
-                for (int y = 0; y < chunk.getWorld().getMaxHeight(); y++) {
+                for (int y = 0; y < 256; y++) {
                     chunk.getBlock(x, y, z).setBlockData(cd.getBlockData(x, y, z));
                 }
             }
