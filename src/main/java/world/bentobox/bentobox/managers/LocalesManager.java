@@ -1,5 +1,15 @@
 package world.bentobox.bentobox.managers;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.YamlConfiguration;
+import world.bentobox.bentobox.BentoBox;
+import world.bentobox.bentobox.api.addons.Addon;
+import world.bentobox.bentobox.api.localization.BentoBoxLocale;
+import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.util.FileLister;
+import world.bentobox.bentobox.util.Util;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -13,15 +23,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.jar.JarFile;
 
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import world.bentobox.bentobox.BentoBox;
-import world.bentobox.bentobox.api.addons.Addon;
-import world.bentobox.bentobox.api.localization.BentoBoxLocale;
-import world.bentobox.bentobox.api.user.User;
-import world.bentobox.bentobox.util.FileLister;
-import world.bentobox.bentobox.util.Util;
-
 /**
  * @author tastybento, Poslovitch
  */
@@ -31,6 +32,7 @@ public class LocalesManager {
     private Map<Locale, BentoBoxLocale> languages = new HashMap<>();
     private static final String LOCALE_FOLDER = "locales";
     private static final String BENTOBOX = "BentoBox";
+    private static final String SPACER = "*************************************************";
 
     public LocalesManager(BentoBox plugin) {
         this.plugin = plugin;
@@ -238,5 +240,72 @@ public class LocalesManager {
         });
     }
 
+    /**
+     * Loads all the locales available in the locale folder given.
+     * Used for loading all locales from plugin and addons.
+     *
+     * @param fix whether or not locale files with missing translations should be fixed.
+     *            Not currently supported.
+     * @since 1.5.0
+     */
+    public void analyzeLocales(boolean fix) {
+        languages.clear();
 
+        User user = User.getInstance(Bukkit.getConsoleSender());
+
+        user.sendRawMessage(ChatColor.AQUA + SPACER);
+        plugin.log(ChatColor.AQUA + "Analyzing BentoBox locale files");
+        user.sendRawMessage(ChatColor.AQUA + SPACER);
+        loadLocalesFromFile(BENTOBOX);
+        analyze(fix);
+        user.sendRawMessage(ChatColor.AQUA + "Analyzing Addon locale files");
+        plugin.getAddonsManager().getAddons().forEach(addon -> {
+            user.sendRawMessage(ChatColor.AQUA + SPACER);
+            user.sendRawMessage(ChatColor.AQUA + "Analyzing addon " + addon.getDescription().getName());
+            user.sendRawMessage(ChatColor.AQUA + SPACER);
+            languages.clear();
+            loadLocalesFromFile(addon.getDescription().getName());
+            analyze(fix);
+        });
+        reloadLanguages();
+    }
+
+    /**
+     *
+     * @param fix whether or not locale files with missing translations should be fixed.
+     *            Not currently supported.
+     * @since 1.5.0
+     */
+    private void analyze(boolean fix) {
+        if (!languages.containsKey(Locale.US)) {
+            return;
+        }
+        User user = User.getInstance(Bukkit.getConsoleSender());
+
+        user.sendRawMessage(ChatColor.GREEN + "The following locales are supported:");
+        languages.forEach((k,v) -> user.sendRawMessage(ChatColor.GOLD + k.toLanguageTag() + " " + k.getDisplayLanguage() + " " + k.getDisplayCountry()));
+        // Start with US English
+        YamlConfiguration usConfig = languages.get(Locale.US).getConfig();
+        // Fix config
+        YamlConfiguration fixConfig = new YamlConfiguration();
+        languages.values().stream().filter(l -> !l.toLanguageTag().equals(Locale.US.toLanguageTag())).forEach(l -> {
+            user.sendRawMessage(ChatColor.GREEN + SPACER);
+            user.sendRawMessage(ChatColor.GREEN + "Analyzing locale file " + l.toLanguageTag() + ":");
+            YamlConfiguration c = l.getConfig();
+            boolean complete = true;
+            for (String path : usConfig.getKeys(true)) {
+                if (!c.contains(path, true)) {
+                    complete = false;
+                    fixConfig.set(path, user.getTranslationOrNothing(path).replace('§', '&'));
+                }
+            }
+            if (complete) {
+                user.sendRawMessage(ChatColor.GREEN + "Language file covers all strings.");
+            } else {
+                user.sendRawMessage(ChatColor.RED + "The following YAML is missing. Please translate it:");
+                plugin.log("\n" + fixConfig.saveToString());
+            }
+
+        });
+    }
 }
