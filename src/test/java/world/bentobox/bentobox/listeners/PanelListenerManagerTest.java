@@ -91,6 +91,7 @@ public class PanelListenerManagerTest {
 
         // Inventory view
         when(view.getPlayer()).thenReturn(player);
+        when(view.getTitle()).thenReturn("name");
         Inventory top = mock(Inventory.class);
         when(top.getSize()).thenReturn(9);
         when(view.getTopInventory()).thenReturn(top);
@@ -167,6 +168,7 @@ public class PanelListenerManagerTest {
     public void testOnInventoryClickOpenPanelsWrongPanel() {
         PanelListenerManager.getOpenPanels().put(uuid, panel);
         when(view.getTopInventory()).thenReturn(anotherInv);
+        when(view.getTitle()).thenReturn("another title");
         InventoryClickEvent e = new InventoryClickEvent(view, type, 0, click, inv);
         plm.onInventoryClick(e);
         // Panel should be removed
