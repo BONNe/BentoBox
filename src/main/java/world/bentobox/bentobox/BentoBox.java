@@ -85,7 +85,7 @@ public class BentoBox extends JavaPlugin {
 
     @Override
     public void onEnable(){
-        if (!ServerCompatibility.getInstance().checkCompatibility(this).isCanLaunch()) {
+        if (!ServerCompatibility.getInstance().checkCompatibility().isCanLaunch()) {
             // The server's most likely incompatible.
             // Show a warning
             logWarning("************ Disclaimer **************");
@@ -110,7 +110,7 @@ public class BentoBox extends JavaPlugin {
             return;
         }
         // Saving the config now.
-        new Config<>(this, Settings.class).saveConfigObject(settings);
+        saveConfig();
 
         // Start Database managers
         playersManager = new PlayersManager(this);
@@ -145,20 +145,22 @@ public class BentoBox extends JavaPlugin {
         // Load hooks
         hooksManager = new HooksManager(this);
         hooksManager.registerHook(new VaultHook());
-        hooksManager.registerHook(new PlaceholderAPIHook());
-        // Setup the Placeholders manager
-        placeholdersManager = new PlaceholdersManager(this);
 
         // Load addons. Addons may load worlds, so they must go before islands are loaded.
         addonsManager = new AddonsManager(this);
         addonsManager.loadAddons();
-        // Enable addons
-        addonsManager.enableAddons();
-        
-        // Register default gamemode placeholders
-        addonsManager.getGameModeAddons().forEach(placeholdersManager::registerDefaultPlaceholders);
 
         getServer().getScheduler().runTask(instance, () -> {
+            hooksManager.registerHook(new PlaceholderAPIHook());
+            // Setup the Placeholders manager
+            placeholdersManager = new PlaceholdersManager(this);
+
+            // Enable addons
+            addonsManager.enableAddons();
+
+            // Register default gamemode placeholders
+            addonsManager.getGameModeAddons().forEach(placeholdersManager::registerDefaultPlaceholders);
+
             // Register Listeners
             registerListeners();
 
@@ -331,6 +333,11 @@ public class BentoBox extends JavaPlugin {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void saveConfig() {
+        if (settings != null) new Config<>(this, Settings.class).saveConfigObject(settings);
     }
 
     /**

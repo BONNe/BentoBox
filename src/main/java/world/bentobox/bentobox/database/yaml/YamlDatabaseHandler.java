@@ -249,6 +249,9 @@ public class YamlDatabaseHandler<T> extends AbstractDatabaseHandler<T> {
                 method.invoke(instance, setTo);
             } else {
                 plugin.logError("Default setting value will be used: " + propertyDescriptor.getReadMethod().invoke(instance));
+                plugin.logError(method.getName());
+                plugin.logError(propertyDescriptor.getReadMethod().getName());
+                plugin.logError(instance.toString());
             }
         }
     }
@@ -649,6 +652,9 @@ public class YamlDatabaseHandler<T> extends AbstractDatabaseHandler<T> {
     }
 
     private void delete(String uniqueId) {
+        if (uniqueId == null) {
+            return;
+        }
         // The filename of the YAML file is the value of uniqueId field plus .yml. Sometimes the .yml is already appended.
         if (!uniqueId.endsWith(YML)) {
             uniqueId = uniqueId + YML;
@@ -660,7 +666,7 @@ public class YamlDatabaseHandler<T> extends AbstractDatabaseHandler<T> {
             // Obtain the file and delete it
             File file = new File(tableFolder, uniqueId);
             try {
-                Files.delete(file.toPath());
+                Files.deleteIfExists(file.toPath());
             } catch (IOException e) {
                 plugin.logError("Could not delete yml database object! " + file.getName() + " - " + e.getMessage());
             }

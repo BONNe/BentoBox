@@ -197,8 +197,11 @@ commands:
       set-pos2: "&aPosition 2 set at [vector]"
       set-different-pos: "&cSet a different location - this pos is already set!"
       need-pos1-pos2: "&cSet pos1 and pos2 first!"
+      copying: "&bCopying blocks..."
       copied-blocks: "&bCopied [number] blocks to clipboard"
       look-at-a-block: "&cLook at block within 20 blocks to set"
+      mid-copy: "&cYou are mid-copy. Wait until the copy is done."
+      copied-percent: "&6Copied [number]%"
       copy:
         parameters: "[air]"
         description: "copy the clipboard set by pos1 and pos2 and optionally the air blocks"
@@ -250,10 +253,13 @@ commands:
     about:
       description: "display copyright and license info"
     reload:
-      description: "reloads settings, addons (if supported) and locales"
+      parameters: "[addon]"
+      description: "reloads all addons, settings and locales or reloads an individual addon"
       locales-reloaded: "&2Languages reloaded."
       addons-reloaded: "&2Addons reloaded."
       settings-reloaded: "&2Settings reloaded."
+      addon: "&6Reloading [description]"
+      unknown-addon: "&2Unknown addon!"
     version:
       plugin-version: "&2BentoBox version: &3[version]"
       description: "display BentoBox and addons versions"
@@ -271,6 +277,14 @@ commands:
       see-console: |-
         &aCheck the console to see the feedback.
         &aThis command is so spammy that the feedback cannot be read from chat...
+    migrate:
+      description: "migrates data from one database to another"
+      players: "&6Migrating players"
+      names: "&6Migrating names"
+      addons: "&6Migrating addons"
+      class: "&6Migrating [description]"
+      migrated: "&AMigrated"
+      
   confirmation:
     confirm: "&cType command again within &b[seconds]s&c to confirm."
     previous-request-cancelled: "&6Previous confirmation request cancelled."
@@ -302,6 +316,16 @@ commands:
     info:
       description: "display info about your island or the player's island"
       parameters: "<player>"
+    near:
+      description: "show the name of neighboring islands around you"
+      parameters: ""
+      the-following-islands: "&aThe following islands are nearby:"
+      syntax: "&6[direction]: &a[name]"
+      north: North
+      south: South
+      east: East
+      west: West
+      no-neighbors: "&cYou have no immediate neighboring islands!"
     reset:
       description: "restart your island and remove the old one"
       parameters: "<schem>"
